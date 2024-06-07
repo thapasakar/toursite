@@ -1,24 +1,29 @@
 import React, { useCallback, useEffect, useState } from "react";
 import "./App.css";
-import data from "./data";
 
 import Loading from "./Loading";
-import Tour from "./tour";
+
+import Tours from "./Tours";
 
 function App() {
-  const [loading, setLoading] = useState(false);
-  const [list, setList] = useState(data);
+  const [loading, setLoading] = useState(true);
+  const [tours, setTours] = useState([]);
+
+  const removeFunction = (id) => {
+    const updateTours = tours.filter((tour) => tour.id != id);
+    setTours(updateTours);
+  };
 
   async function getPost() {
     setLoading(true);
     const response = await fetch(
       "https://jsonplaceholder.typicode.com/comments?postId=1"
     );
-    const posts = await response.json();
-    setList(posts);
+    const tours = await response.json();
+    setTours(tours);
     setLoading(false);
   }
-
+  console.log("app.js", tours);
   useEffect(() => {
     getPost();
   }, []);
@@ -30,9 +35,10 @@ function App() {
       </main>
     );
   }
+
   return (
     <main>
-      <Tour List={list} />
+      <Tours tours={tours} removeFunction={removeFunction} getPost={getPost} />
     </main>
   );
 }
